@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import co.nei.stickyheader.databinding.FragmentHomeListBinding
@@ -11,14 +12,14 @@ import co.nei.stickyheader.databinding.FragmentHomeListBinding
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeListBinding? = null
-    private val binding get() = _binding
+    private val binding get() = _binding!!
     private var stickyHeaderItemDecorator: StickyHeaderItemDecorator? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentHomeListBinding.inflate(inflater, container, false)
-        return binding?.root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -32,7 +33,7 @@ class HomeFragment : Fragment() {
         stickyHeaderItemDecorator = null
 
         stickyHeaderItemDecorator = StickyHeaderItemDecorator()
-        binding?.recyclerView?.let {
+        binding.recyclerView.let {
             val adapter = it.adapter
             if (adapter is ListRecyclerAdapter) {
                 stickyHeaderItemDecorator?.attachRecyclerView(
@@ -45,10 +46,14 @@ class HomeFragment : Fragment() {
     }
 
     private fun initAdapter() {
-        binding?.recyclerView?.apply {
+        binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = ListRecyclerAdapter(getDummyItems()) {
-                // (activity as? MainActivity)?.launchDetailPage(it)
+            adapter = ListRecyclerAdapter(getDummyItems()) { position ->
+                Toast.makeText(
+                    requireContext(),
+                    "Item Clicked $position",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
@@ -110,12 +115,6 @@ class HomeFragment : Fragment() {
             ItemModel(),
             ItemModel(),
         )
-    }
-
-    companion object {
-
-        @JvmStatic
-        fun newInstance() = HomeFragment()
     }
 }
 

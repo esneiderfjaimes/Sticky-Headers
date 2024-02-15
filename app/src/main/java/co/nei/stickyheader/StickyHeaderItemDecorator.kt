@@ -6,6 +6,8 @@ import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
+// code from https://medium.com/@preethamivan473/sticky-headers-with-click-interactions-using-android-recycler-view-40e583a31605
+
 class StickyHeaderItemDecorator {
 
     private lateinit var listener: StickyHeaderInterface

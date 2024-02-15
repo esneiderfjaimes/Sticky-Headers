@@ -2,7 +2,6 @@ package co.nei.stickyheader
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import co.nei.stickyheader.databinding.ItemHeaderBinding
 import co.nei.stickyheader.databinding.ItemListBinding
@@ -41,12 +40,8 @@ class ListRecyclerAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is HeaderViewHolder -> {
-                holder.contentView.text = "Header $position"
-                holder.nextButton.setOnClickListener { onHeaderItemClick(position) }
-            }
-
-            is ItemBodyViewHolder -> holder.contentView.text = "Content body at position $position"
+            is HeaderViewHolder -> holder.bind(position)
+            is ItemBodyViewHolder -> holder.bind(position)
         }
     }
 
@@ -55,15 +50,21 @@ class ListRecyclerAdapter(
     override fun getItemViewType(position: Int) =
         if (itemsList[position].isHeader) TYPE_HEADER else TYPE_CONTENT
 
-    inner class ItemBodyViewHolder(binding: ItemListBinding) :
+    inner class ItemBodyViewHolder(private val binding: ItemListBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        val contentView: TextView = binding.content
+        fun bind(position: Int) {
+            val text = "Content body at position $position"
+            binding.content.text = text
+            binding.root.setOnClickListener { onHeaderItemClick(position) }
+        }
     }
 
-    inner class HeaderViewHolder(binding: ItemHeaderBinding) :
+    inner class HeaderViewHolder(private val binding: ItemHeaderBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        val contentView: TextView = binding.content
-        val nextButton: TextView = binding.nextText
+        fun bind(position: Int) {
+            val text = "Header $position"
+            binding.content.text = text
+        }
     }
 
     override fun isHeader(itemPosition: Int) = itemsList[itemPosition].isHeader
